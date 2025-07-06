@@ -1,0 +1,54 @@
+html, body {
+    margin: 0;
+    height: 100vh;
+}
+
+* {
+    font-family: Calibri, sans-serif;
+}
+
+button { 
+    padding: 5px;
+    margin: 0;
+}
+.container { 
+    height: 600px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.board { 
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr);
+    width: 500px;
+    height: 500px;
+}
+
+.reset { 
+    margin-top: 15px;
+    width: 100px;
+}
+
+.cell {
+    font-weight: 600;
+    font-size: 100px;
+    font-family: Calibri, sans-serif;
+}
+
+#playerForm { 
+    border: grey 2px solid;
+    padding: 1.5rem;
+    font-family: Calibri, sans-serif;
+}
+
+.text-display { 
+    height: 80px;
+    align-items: center;
+    display: grid;
+    font-family: Calibri, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    justify-content: center;
+}
