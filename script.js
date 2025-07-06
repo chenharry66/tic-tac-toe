@@ -1,10 +1,11 @@
 // no public access with iife
 function GameBoard() {
     const board = [];
-    
+
     const getBoard = () => { 
         return board; 
     }
+
     const initializeBoard = () => { 
         for (let i = 0; i < 3; i++) {
             board[i] = [];
@@ -30,12 +31,9 @@ function GameBoard() {
     const checkOver = () => { 
         //rows and cols
         for (let j = 0; j < 3; j++) {
-            if ((board[0][j] == "O" &&
-                board[1][j] == "O" &&
-                board[2][j] == "O") ||
-                (board[0][j] == "X" &&
-                board[1][j] =="X" &&
-                board[2][j] == "X")){
+            if ((board[0][j] != "" &&
+                board[0][j] == board[1][j] &&
+                board[1][j] == board[2][j])){
                     return 1;
                 }
         }
@@ -47,13 +45,13 @@ function GameBoard() {
             }
         }
         
-        // diag
-        if ((board[0][0] == "O" &&
-                board[1][1] == "O" &&
-                board[2][2] == "O") ||
-                (board[0][0] == "X" &&
-                board[1][1] =="X" &&
-                board[2][2] == "X")){
+        // diags
+        if ((board[0][0] != "" &&
+                board[0][0] == board[1][1] &&
+                board[1][1] == board[2][2]) ||
+                (board[0][2] != "" &&
+                board[0][2] == board[1][1] &&
+                board[1][1] == board[2][0])){
             return 1;
              }
         
@@ -80,11 +78,17 @@ function GameBoard() {
 };
 
 function Player(name, playerType=0) { 
-    const winMessage = () => { 
-        console.log(`Game Over! ${name} Wins`);
+    const getName = () => {
+        return name;
     }
-    return {name, playerType, winMessage};
+
+    const getPlayerType = () => {
+        return playerType;
+    }
+
+    return {getName, getPlayerType};
 }
+
 // the stuff returned by the obejcts are the direct methos you have access to from that object 
 // other stuff is private only internal access 
 
@@ -101,9 +105,6 @@ function GameController(player1, player2) {
     const getIsOver = () => { 
         return isOver;
     }
-    const toggleIsOver = () => { 
-        isOver = true;
-    }
 
     const getPlayers = () => { 
         return players;
@@ -112,7 +113,6 @@ function GameController(player1, player2) {
         return players[playerTurn];
     }
 
-    // can call the board thing here i guess
     const playTurn = (i, j) => {
         if (board.getCellValue(i,j) != "") {
             return;
@@ -121,16 +121,12 @@ function GameController(player1, player2) {
         board.fillSquare(i,j, playerTurn)
         if (board.checkOver() == -1){
             playerTurn = (-1 * playerTurn) + 1;
-            // maybe return a message an dthen use upate screen to reflec tthat message??? 
         }
         else if(board.checkOver() == 0){
-            // tiegmae
-            console.log("It's a tie game!")
-            toggleIsOver();
+            isOver = true;
             return 0
         } else { 
-            getActivePlayer().winMessage();
-            toggleIsOver();
+            isOver = true;
             return 1
         }
     }
@@ -204,7 +200,7 @@ const ScreenController  = (function createDisplayController() {
 
     const updateTurnMessage = (activePlayer) => { 
         const textMessage = document.querySelector(".text-display")
-        textMessage.textContent = `It's ${activePlayer.name}'s turn`;
+        textMessage.textContent = `It's ${activePlayer.getName()}'s turn`;
     }
 
     // bubbles to the nearest cell, get the cooridnates, update board, update display 
@@ -221,15 +217,14 @@ const ScreenController  = (function createDisplayController() {
                     textMessage.textContent = `Tie Game! Good job guys. `;
                 }
                 else {
-                    console.log(`${game.getActivePlayer().name}`)
-                    textMessage.textContent = `${game.getActivePlayer().name} Wins!`
+                    textMessage.textContent = `${game.getActivePlayer().getName()} Wins!`
                 }
             } else {
             updateTurnMessage(game.getActivePlayer());
             }
         }
     }
-    
+
     const form = document.querySelector("#playerForm");
     form.addEventListener("submit", (e) => handlePlayerForm(e))
     // when it returns the cooridnates use the board to check if its empty, if its not empty then add to board 
